@@ -7,7 +7,8 @@ name: dwg-web-deploy
 
 on:
   push:
-    branches: [dwg-web]
+    # dwg-web is to be renamed main (the owner, 2026-10-29); both deploy until it is.
+    branches: [main, dwg-web]
   workflow_dispatch:
 
 permissions:
