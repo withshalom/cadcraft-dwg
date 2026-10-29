@@ -14,10 +14,10 @@ fn main() {
     }
     res.set("ProductName", "DWGCraft")
         .set("FileDescription", "DWGCraft computer-aided design (built on CADCraft)")
-        .set("CompanyName", "Learning Machines LLC")
+        .set("CompanyName", "WithShalom Studios")
         .set("LegalCopyright", "Copyright (c) 2026 ArtCraft Team, the CADCraft contributors and WithShalom Studios. MIT OR Apache-2.0.")
-        .set("OriginalFilename", "cadcraft.exe")
-        .set("InternalName", "cadcraft");
+        .set("OriginalFilename", "dwgcraft.exe")
+        .set("InternalName", "dwgcraft");
     if let Err(e) = res.compile() {
         if std::env::var_os("CADCRAFT_REQUIRE_WINRES").is_some() {
             eprintln!("embedding Windows resources failed: {e}");

@@ -38,6 +38,18 @@ if [[ -z "${CADCRAFT_BUILD_SHA:-}" ]]; then
 fi
 export CADCRAFT_BUILD_SHA
 export CADCRAFT_BUILD_DATE="${CADCRAFT_BUILD_DATE:-$(date -u +%Y-%m-%d)}"
+
+# The product these scripts package: DWGCraft, WithShalom Studios' build of CADCraft. The cargo
+# packages and binaries keep upstream's names (`cadcraft`, `cadcraft-cli`); what gets installed,
+# and every package and file name, is DWGCraft's, so it never replaces or clashes with an installed
+# CADCraft.
+export APP_SLUG=dwgcraft                # package, file and installed binary names
+export APP_TITLE=DWGCraft               # what people see
+export APP_ID=dev.cadcraft.dwg          # reverse-DNS id: desktop file, icons, macOS bundle, Flatpak
+export APP_VENDOR="WithShalom Studios"  # author and publisher
+export APP_MAINTAINER="${APP_MAINTAINER:-WithShalom Studios <design@withshalom.com>}"
+export APP_HOMEPAGE=https://dwg.cadcraft.dev
+export APP_REPO=withshalom/dwgcraft
 export CARGO_TARGET_DIR="${CARGO_TARGET_DIR:-$ROOT/target}"
 
 # Emit a GitHub Actions warning (plain stderr outside Actions).

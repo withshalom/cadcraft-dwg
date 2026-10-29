@@ -18,7 +18,7 @@ set -euo pipefail
 # shellcheck source=../env.sh
 . "$(dirname "${BASH_SOURCE[0]}")/../env.sh"
 LINUX="$ROOT/packaging/linux"
-APP_ID=ai.storyteller.cadcraft
+APP_ID=dev.cadcraft.dwg
 
 SKIP_BUILD=0
 DRY_RUN=0

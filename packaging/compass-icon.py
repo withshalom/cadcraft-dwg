@@ -21,7 +21,7 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "assets", "app-icon")
-ID = "ai.storyteller.cadcraft"
+ID = "dev.cadcraft.dwg"
 
 # Colours.
 DEEP = "#081d38"  # the tile's darkest blueprint blue

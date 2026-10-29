@@ -1,14 +1,14 @@
 [Desktop Entry]
 Type=Application
-Name=CADCraft
+Name=DWGCraft
 GenericName=Computer-Aided Design
 Comment=Draft, dimension and plot 2D drawings; open DXF and DWG files
-Exec=cadcraft %F
-TryExec=cadcraft
-Icon=ai.storyteller.cadcraft
+Exec=dwgcraft %F
+TryExec=dwgcraft
+Icon=dev.cadcraft.dwg
 Terminal=false
 StartupNotify=true
-StartupWMClass=ai.storyteller.cadcraft
+StartupWMClass=dev.cadcraft.dwg
 Categories=Graphics;Engineering;VectorGraphics;
 MimeType=image/vnd.dxf;image/vnd.dwg;application/x-dxf;application/acad;
 Keywords=cad;drafting;dxf;dwg;drawing;engineering;architecture;mechanical;

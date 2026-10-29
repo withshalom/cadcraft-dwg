@@ -194,7 +194,9 @@ fn filters_for_save(name: &str) -> [(&'static str, &'static str); 6] {
     filters
 }
 
-const APP_ID: &str = "ai.storyteller.cadcraft";
+/// The window's app id (Wayland) and class (X11): DWGCraft's, as its desktop entry names it
+/// (`packaging/linux/dev.cadcraft.dwg.desktop`, StartupWMClass).
+const APP_ID: &str = "dev.cadcraft.dwg";
 
 /// Stencil bits of the window's render pass (see `NativeOptions::stencil_buffer`).
 const STENCIL_BITS: u8 = 8;
