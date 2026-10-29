@@ -1,5 +1,5 @@
 # Builds the browser version from the `dwg-web` branch (dwg-fidelity's DWG work, built for the web)
-# and publishes it to GitHub Pages. Runs only in withshalom/cadcraft-dwg. Before publishing it opens
+# and publishes it to GitHub Pages. Runs only in withshalom/dwgcraft. Before publishing it opens
 # real DWG drawings (the MI-201 corpus, cloned from withshalom/CAD at run time, never committed
 # here) in the built page, in a headless browser, and pushes the pictures and the browser console
 # to this repo's `previews` branch: the proof that the web build reads DWG.
@@ -24,7 +24,7 @@ env:
 
 jobs:
   build:
-    if: github.repository == 'withshalom/cadcraft-dwg'
+    if: github.repository == 'withshalom/dwgcraft'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -105,7 +105,7 @@ jobs:
           path: dist/web
 
   deploy:
-    if: github.repository == 'withshalom/cadcraft-dwg'
+    if: github.repository == 'withshalom/dwgcraft'
     needs: build
     runs-on: ubuntu-latest
     environment:
