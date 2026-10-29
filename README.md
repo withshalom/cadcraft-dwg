@@ -16,6 +16,13 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/withshalom/dwgcraft/releases/latest/download/dwgcraft-windows-x64.msi"><img alt="Download for Windows" src="https://img.shields.io/badge/Windows-Download-0078D6?style=for-the-badge&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0zIDNoOC41djguNUgzek0xMi41IDNIMjF2OC41aC04LjV6TTMgMTIuNWg4LjVWMjFIM3pNMTIuNSAxMi41SDIxVjIxaC04LjV6Ii8%2BPC9zdmc%2B&logoColor=white"></a>
+  <a href="https://github.com/withshalom/dwgcraft/releases/latest/download/dwgcraft-macos-universal.dmg"><img alt="Download for macOS" src="https://img.shields.io/badge/macOS-Download-333333?style=for-the-badge&logo=apple&logoColor=white"></a>
+  <a href="https://github.com/withshalom/dwgcraft/releases/latest/download/dwgcraft-linux-x86_64.AppImage"><img alt="Download for Linux (AppImage)" src="https://img.shields.io/badge/Linux-AppImage-E95420?style=for-the-badge&logo=linux&logoColor=white"></a>
+  <a href="https://dwg.cadcraft.dev/"><img alt="Use it in your browser" src="https://img.shields.io/badge/Web-Use_in_browser-0e3463?style=for-the-badge&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIj48Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIvPjxwYXRoIGQ9Ik0yIDEyaDIwTTEyIDJhMTUgMTUgMCAwIDEgMCAyME0xMiAyYTE1IDE1IDAgMCAwIDAgMjAiLz48L3N2Zz4%3D&logoColor=white"></a>
+</p>
+
+<p align="center">
   <img alt="Status: in active development" src="https://img.shields.io/badge/status-in%20active%20development-0e3463?style=flat-square">
   <img alt="Written in pure Rust" src="https://img.shields.io/badge/pure-Rust-b83a24?style=flat-square&logo=rust&logoColor=white">
   <img alt="Runs on macOS, Windows, Linux, FreeBSD and the web" src="https://img.shields.io/badge/runs%20on-macOS%20%C2%B7%20Windows%20%C2%B7%20Linux%20%C2%B7%20FreeBSD%20%C2%B7%20Web-555555?style=flat-square">
@@ -26,6 +33,7 @@
 <p align="center">
   <a href="https://dwg.cadcraft.dev/"><b>Try DWGCraft in your browser</b></a> ·
   <a href="#screenshots">Screenshots</a> ·
+  <a href="#downloads">Downloads</a> ·
   <a href="#why-dwgcraft">Why DWGCraft</a> ·
   <a href="#what-works-today">What works today</a> ·
   <a href="#quick-start">Quick start</a> ·
@@ -267,9 +275,29 @@ See [ROADMAP.md](ROADMAP.md) for the stage, measured parity and the estimate of 
 
 ## Downloads
 
-DWGCraft has no packaged releases yet. Use it in the browser at [dwg.cadcraft.dev](https://dwg.cadcraft.dev/),
-or build it from source ([Quick start](#quick-start)). The packaging scripts in `packaging/` build the same
-installers upstream CADCraft publishes; their file names still say `cadcraft`.
+One click downloads the installer from the [latest release](https://github.com/withshalom/dwgcraft/releases/latest):
+
+| System | Download |
+|---|---|
+| Windows 10 and 11 | [64-bit (x64)](https://github.com/withshalom/dwgcraft/releases/latest/download/dwgcraft-windows-x64.msi) · [ARM64](https://github.com/withshalom/dwgcraft/releases/latest/download/dwgcraft-windows-arm64.msi) · [32-bit (x86)](https://github.com/withshalom/dwgcraft/releases/latest/download/dwgcraft-windows-x86.msi) |
+| macOS 11 or later (Apple silicon and Intel) | [Disk image](https://github.com/withshalom/dwgcraft/releases/latest/download/dwgcraft-macos-universal.dmg) |
+| Linux, any distribution | [AppImage x86_64](https://github.com/withshalom/dwgcraft/releases/latest/download/dwgcraft-linux-x86_64.AppImage) · [AppImage ARM64](https://github.com/withshalom/dwgcraft/releases/latest/download/dwgcraft-linux-aarch64.AppImage) |
+| Debian, Ubuntu, Mint, Pop!_OS | [.deb x86_64](https://github.com/withshalom/dwgcraft/releases/latest/download/dwgcraft-linux-x86_64.deb) · [.deb ARM64](https://github.com/withshalom/dwgcraft/releases/latest/download/dwgcraft-linux-aarch64.deb) |
+| Fedora, openSUSE, RHEL | [.rpm x86_64](https://github.com/withshalom/dwgcraft/releases/latest/download/dwgcraft-linux-x86_64.rpm) · [.rpm ARM64](https://github.com/withshalom/dwgcraft/releases/latest/download/dwgcraft-linux-aarch64.rpm) |
+| Flatpak | [x86_64](https://github.com/withshalom/dwgcraft/releases/latest/download/dwgcraft-linux-x86_64.flatpak) · [ARM64](https://github.com/withshalom/dwgcraft/releases/latest/download/dwgcraft-linux-aarch64.flatpak) |
+| Browser | Nothing to install: [dwg.cadcraft.dev](https://dwg.cadcraft.dev/) |
+
+The [release page](https://github.com/withshalom/dwgcraft/releases/latest) also has the Windows portable
+zips, the Arch Linux packages, `.tar.gz` builds (including RISC-V), the macOS command-line tool, the web build
+and `SHA256SUMS.txt`. The Windows and Linux downloads include `dwgcraft-cli`, the command-line and MCP tool,
+next to the app; on macOS it's the separate `dwgcraft-cli-…-macos-universal.zip`.
+
+The downloads aren't code-signed yet. On Windows, if SmartScreen warns, choose **More info**, then **Run
+anyway**. On macOS, the first time, right-click DWGCraft in Applications and choose **Open**.
+
+DWGCraft tells you when a newer version is out (it checks when it starts; Help › Check for Updates… checks
+now). The AppImage, `.deb`, `.rpm` and Windows portable copies install it in one click; with the others,
+download the new installer and run it over the old one.
 
 ## Built on CADCraft
 
@@ -283,9 +311,9 @@ WithShalom Studios' DWG work on top:
   type, and the objects you didn't change are saved as the file had them. They come to the main build once
   upstream takes them.
 
-The code stays CADCraft's wherever it can, so upstream's improvements keep merging in. The program, its command
-line and its files are still called `cadcraft` (`cadcraft-cli`, `cargo run -p cadcraft`); only what you see in
-the app says DWGCraft.
+The code stays CADCraft's wherever it can, so upstream's improvements keep merging in. The installers put
+`dwgcraft` and `dwgcraft-cli` on your system; in the source, the crates and binaries keep CADCraft's names
+(`cargo run -p cadcraft`, `cadcraft-cli`).
 
 ## License and credits
 

@@ -796,7 +796,7 @@ jobs:
           if-no-files-found: error
 
   release:
-    timeout-minutes: 10
+    timeout-minutes: 25
     name: Draft GitHub Release
     if: "!cancelled() && !contains(needs.*.result, 'failure')"
     needs: [version, macos, windows, linux, linux-riscv64, flatpak, arch, web]
@@ -811,3 +811,28 @@ jobs:
           app-title: DWGCraft
           prerelease: ${{ needs.version.outputs.prerelease }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+      # The README's download buttons link to releases/latest/download/<name>, which GitHub answers
+      # with the newest release's file of that name: so the main installers are also uploaded under
+      # names without the version (dwgcraft-windows-x64.msi). The update check ignores these: it
+      # only reads names that carry a version.
+      - name: Add the download buttons' files
+        shell: bash
+        working-directory: artifacts
+        env:
+          VERSION: ${{ needs.version.outputs.version }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/buttons"
+          for target in windows-x64.msi windows-arm64.msi windows-x86.msi macos-universal.dmg \
+                        linux-x86_64.AppImage linux-aarch64.AppImage linux-x86_64.deb linux-aarch64.deb \
+                        linux-x86_64.rpm linux-aarch64.rpm linux-x86_64.flatpak linux-aarch64.flatpak; do
+            src="dwgcraft-$VERSION-$target"
+            if [ ! -f "$src" ]; then
+              echo "::error::$src is missing from the release"
+              exit 1
+            fi
+            cp -- "$src" "$RUNNER_TEMP/buttons/dwgcraft-$target"
+          done
+          gh release upload "v$VERSION" --clobber -- "$RUNNER_TEMP"/buttons/*

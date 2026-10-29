@@ -2,10 +2,15 @@
 //! Updates… (desktop only; the web build is always the latest). The flow itself is
 //! `craft_update::updater::Updater`.
 
-use craft_update::suite::CADCRAFT;
+use craft_update::App;
 use craft_update::updater::{Action, Status, Updater};
 
 use crate::CadApp;
+
+/// DWGCraft as the update check knows it: its own releases (withshalom/dwgcraft), whose files are
+/// named `dwgcraft-<version>-…` (`packaging/env.sh`'s `APP_SLUG`). Not the suite's CADCraft entry,
+/// which would offer CADCraft's releases in place of DWGCraft's.
+pub const APP: App = App::new("dwgcraft", crate::i18n::PRODUCT_NAME, "DWG drafting", "withshalom/dwgcraft");
 
 /// The version this build reports to the update check.
 const VERSION: &str = env!("CARGO_PKG_VERSION");
@@ -21,7 +26,7 @@ pub struct Runtime {
 
 impl Default for Runtime {
     fn default() -> Self {
-        Self { updater: Updater::new(&CADCRAFT, VERSION), enabled: false, check_requested: false }
+        Self { updater: Updater::new(&APP, VERSION), enabled: false, check_requested: false }
     }
 }
 
@@ -67,5 +72,21 @@ pub fn show(app: &mut CadApp, ctx: &egui::Context) {
         // process has exited.
         Action::Close => ctx.send_viewport_cmd(egui::ViewportCommand::Close),
         Action::None => {}
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::APP;
+
+    #[test]
+    fn updates_come_from_dwgcrafts_own_releases() {
+        assert_eq!(APP.repo, "withshalom/dwgcraft");
+        assert_eq!(crate::i18n::REPOSITORY, APP.repo_url());
+        assert_eq!(APP.name, "DWGCraft");
+        // The release files' stem (packaging/env.sh: APP_SLUG=dwgcraft).
+        let env = include_str!("../../../packaging/env.sh");
+        let slug = env.lines().find_map(|l| l.trim().strip_prefix("export APP_SLUG=")).and_then(|v| v.split_whitespace().next());
+        assert_eq!(slug, Some(APP.id));
     }
 }
