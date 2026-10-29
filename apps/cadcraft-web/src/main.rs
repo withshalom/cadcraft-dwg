@@ -196,7 +196,7 @@ mod web {
                 match result {
                     Ok(()) => el.remove(),
                     Err(e) => {
-                        el.set_inner_html(&format!("<p>CADCraft failed to start: {e:?}</p><p>A browser with WebGPU or WebGL2 is required.</p>"))
+                        el.set_inner_html(&format!("<p>DWGCraft failed to start: {e:?}</p><p>A browser with WebGPU or WebGL2 is required.</p>"))
                     }
                 }
             }
@@ -211,13 +211,17 @@ fn wants_cpu(query: &str) -> bool {
 }
 
 /// The browser tab title: the open drawing's file name, a bullet once it has unsaved changes,
-/// and the app name (`drawing.dwg • — CADCraft`), or just the app name with no drawing. An
+/// and the app name (`drawing.dwg • — DWGCraft`), or just the app name with no drawing. An
 /// embedding page (`?host=parent`) reads it to tell which drawing opened and whether it is dirty.
+/// The name the browser tab shows (the web build doesn't link the interface's name lookup here).
+#[cfg(any(target_arch = "wasm32", test))]
+const APP_NAME: &str = "DWGCraft";
+
 #[cfg(any(target_arch = "wasm32", test))]
 fn document_title(name: Option<&str>, dirty: bool) -> String {
     match name.filter(|n| !n.trim().is_empty()) {
-        Some(name) => format!("{name}{} — CADCraft", if dirty { " •" } else { "" }),
-        None => "CADCraft".to_string(),
+        Some(name) => format!("{name}{} — {APP_NAME}", if dirty { " •" } else { "" }),
+        None => APP_NAME.to_string(),
     }
 }
 
@@ -282,12 +286,12 @@ mod tests {
     /// bullet; a blank or missing name leaves the app name alone and never shows a bullet.
     #[test]
     fn viewport_title_names_the_document_and_marks_unsaved_changes() {
-        assert_eq!(document_title(Some("drawing.dwg"), false), "drawing.dwg — CADCraft");
-        assert_eq!(document_title(Some("drawing.dwg"), true), "drawing.dwg • — CADCraft");
-        assert_eq!(document_title(Some("Drawing1"), false), "Drawing1 — CADCraft");
-        assert_eq!(document_title(None, false), "CADCraft");
-        assert_eq!(document_title(None, true), "CADCraft");
-        assert_eq!(document_title(Some("   "), true), "CADCraft");
+        assert_eq!(document_title(Some("drawing.dwg"), false), "drawing.dwg — DWGCraft");
+        assert_eq!(document_title(Some("drawing.dwg"), true), "drawing.dwg • — DWGCraft");
+        assert_eq!(document_title(Some("Drawing1"), false), "Drawing1 — DWGCraft");
+        assert_eq!(document_title(None, false), "DWGCraft");
+        assert_eq!(document_title(None, true), "DWGCraft");
+        assert_eq!(document_title(Some("   "), true), "DWGCraft");
     }
 
     /// Guards the change signal: a title is sent on open, rename, dirty change and close, but
@@ -295,17 +299,17 @@ mod tests {
     #[test]
     fn viewport_title_follows_open_rename_and_dirty_changes_only() {
         let mut sent = None;
-        assert_eq!(title_to_send(&mut sent, Some("drawing.dwg"), false).as_deref(), Some("drawing.dwg — CADCraft"));
+        assert_eq!(title_to_send(&mut sent, Some("drawing.dwg"), false).as_deref(), Some("drawing.dwg — DWGCraft"));
         // The page already has it: send nothing.
         assert_eq!(title_to_send(&mut sent, Some("drawing.dwg"), false), None);
         // Unsaved changes add the bullet.
-        assert_eq!(title_to_send(&mut sent, Some("drawing.dwg"), true).as_deref(), Some("drawing.dwg • — CADCraft"));
+        assert_eq!(title_to_send(&mut sent, Some("drawing.dwg"), true).as_deref(), Some("drawing.dwg • — DWGCraft"));
         // A rename shows the new name.
-        assert_eq!(title_to_send(&mut sent, Some("plan.dwg"), true).as_deref(), Some("plan.dwg • — CADCraft"));
+        assert_eq!(title_to_send(&mut sent, Some("plan.dwg"), true).as_deref(), Some("plan.dwg • — DWGCraft"));
         // Saving clears it again.
-        assert_eq!(title_to_send(&mut sent, Some("plan.dwg"), false).as_deref(), Some("plan.dwg — CADCraft"));
+        assert_eq!(title_to_send(&mut sent, Some("plan.dwg"), false).as_deref(), Some("plan.dwg — DWGCraft"));
         // Closing the last drawing leaves the app name only.
-        assert_eq!(title_to_send(&mut sent, None, false).as_deref(), Some("CADCraft"));
+        assert_eq!(title_to_send(&mut sent, None, false).as_deref(), Some("DWGCraft"));
         assert_eq!(title_to_send(&mut sent, None, false), None);
     }
 
@@ -323,6 +327,6 @@ mod tests {
         assert!(push_title(&mut sent, Some("drawing.dwg"), true, |title| written.push(title.to_owned())));
         // Closing the drawing writes the app name.
         assert!(push_title(&mut sent, None, false, |title| written.push(title.to_owned())));
-        assert_eq!(written, ["drawing.dwg — CADCraft", "drawing.dwg • — CADCraft", "CADCraft"]);
+        assert_eq!(written, ["drawing.dwg — DWGCraft", "drawing.dwg • — DWGCraft", "DWGCraft"]);
     }
 }

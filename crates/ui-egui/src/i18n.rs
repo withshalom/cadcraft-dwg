@@ -287,7 +287,83 @@ fn catalog(language: &str) -> Option<&'static Catalog<'static>> {
 }
 
 pub fn tr<'a>(language: &str, source: &'a str) -> &'a str {
-    catalog(language).and_then(|c| c.get(&("", source))).copied().unwrap_or(source)
+    let shown = catalog(language).and_then(|c| c.get(&("", source))).copied().unwrap_or(source);
+    if NAMES_UPSTREAM.contains(&source) { shown } else { brand(shown) }
+}
+
+/// The product's name in the interface. DWGCraft keeps upstream CADCraft's English source strings
+/// and translation catalogs as they are, so they keep merging cleanly, and swaps the name as text
+/// is looked up ([`brand`]).
+pub const PRODUCT_NAME: &str = "DWGCraft";
+
+/// Upstream's name, as the source strings and catalogs say it.
+const UPSTREAM_NAME: &str = "CADCraft";
+
+/// DWGCraft's source repository (upstream CADCraft's is `https://github.com/storytold/cadcraft`).
+pub const REPOSITORY: &str = "https://github.com/withshalom/dwgcraft";
+
+/// The About box's credit line. It names upstream on purpose, so [`tr`] shows it as written.
+pub const CREDITS: &str = "Built on CADCraft by the ArtCraft team.";
+
+/// Strings that name upstream on purpose: shown as written.
+const NAMES_UPSTREAM: &[&str] = &[CREDITS];
+
+/// Most distinct strings [`brand`] keeps a renamed copy of; past it, strings show as they are.
+const MAX_BRANDED: usize = 4096;
+
+/// `s` with each mention of upstream's name replaced by [`PRODUCT_NAME`], endings a language adds
+/// to it kept; `s` itself when it has none. Names inside file and id names stay
+/// (`ai.storyteller.CADCraft`, `CADCraft.svg`). Renamed copies are made once per distinct string and kept for
+/// the life of the process (the interface asks for the same labels every frame), up to
+/// [`MAX_BRANDED`] of them.
+pub fn brand(s: &str) -> &str {
+    if !s.contains(UPSTREAM_NAME) {
+        return s;
+    }
+    static CACHE: std::sync::Mutex<Option<HashMap<String, &'static str>>> = std::sync::Mutex::new(None);
+    let mut cache = CACHE.lock().unwrap_or_else(std::sync::PoisonError::into_inner);
+    let map = cache.get_or_insert_with(Default::default);
+    if let Some(done) = map.get(s) {
+        return done;
+    }
+    let renamed = rename(s);
+    if renamed == s || map.len() >= MAX_BRANDED {
+        return s;
+    }
+    let leaked: &'static str = Box::leak(renamed.into_boxed_str());
+    map.insert(s.to_string(), leaked);
+    leaked
+}
+
+/// [`brand`] for an owned message.
+pub fn brand_owned(s: String) -> String {
+    if s.contains(UPSTREAM_NAME) { rename(&s) } else { s }
+}
+
+/// The whole-word replacement behind [`brand`].
+fn rename(s: &str) -> String {
+    // ASCII only: in Chinese or Japanese the name sits right against the words around it.
+    let part_of_name = |c: char| c.is_ascii_alphanumeric() || matches!(c, '-' | '_' | '.' | '/' | '\\');
+    let mut out = String::with_capacity(s.len());
+    let mut rest = s;
+    while let Some(at) = rest.find(UPSTREAM_NAME) {
+        let (before, from) = rest.split_at(at);
+        let after = from.get(UPSTREAM_NAME.len()..).unwrap_or_default();
+        out.push_str(before);
+        let prev = out.chars().next_back();
+        // What follows the name keeps it only in a file or id name ("CADCraft.svg", "CADCraft_x"):
+        // a full stop ends a sentence, and languages that add endings to a name ("CADCraftból",
+        // "CADCraft-ot") get the new name with their ending.
+        let next_is_name = match after.chars().next() {
+            Some('.') => after.chars().nth(1).is_some_and(|c| c.is_ascii_alphanumeric()),
+            Some(c) => matches!(c, '_' | '/' | '\\'),
+            None => false,
+        };
+        out.push_str(if prev.is_some_and(part_of_name) || next_is_name { UPSTREAM_NAME } else { PRODUCT_NAME });
+        rest = after;
+    }
+    out.push_str(rest);
+    out
 }
 
 pub fn t(source: &str) -> &str {
@@ -297,7 +373,7 @@ pub fn t(source: &str) -> &str {
 /// Menu headings can differ from command or object labels (e.g. Czech Kótování / Kóta).
 /// Catalogs without a `menu` entry retain their ordinary translation.
 pub fn tr_menu<'a>(language: &str, source: &'a str) -> &'a str {
-    catalog(language).and_then(|c| c.get(&("menu", source))).copied().unwrap_or_else(|| tr(language, source))
+    catalog(language).and_then(|c| c.get(&("menu", source))).copied().map(brand).unwrap_or_else(|| tr(language, source))
 }
 
 pub fn menu(source: &str) -> &str {

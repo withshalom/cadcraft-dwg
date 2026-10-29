@@ -556,3 +556,26 @@ fn production_font_chain_covers_latin_and_shortcut_symbols() {
         assert!(view.has_glyph(&egui::FontId::monospace(12.0), '\u{21e7}'), "U+21E7 shift symbol missing in Monospace");
     });
 }
+
+/// The interface says DWGCraft wherever upstream's strings say CADCraft, in every language, but
+/// leaves names inside file and command names alone, and the credit line names upstream as written.
+#[test]
+fn the_interface_says_dwgcraft() {
+    assert_eq!(brand("About CADCraft"), "About DWGCraft");
+    assert_eq!(brand("Save your work and restart CADCraft."), "Save your work and restart DWGCraft.");
+    assert_eq!(brand("CADCraft keeps these preferences"), "DWGCraft keeps these preferences");
+    assert_eq!(brand("Kilépés a CADCraftból"), "Kilépés a DWGCraftból", "a language's ending stays");
+    assert_eq!(brand("关于CADCraft"), "关于DWGCraft");
+    for kept in ["cadcraft-cli", "CADCraft.svg", "ai.storyteller.CADCraft", "CADCraft_Stroke", "no name here"] {
+        assert_eq!(brand(kept), kept);
+    }
+    assert_eq!(brand_owned("Quit CADCraft".to_string()), "Quit DWGCraft");
+    assert_eq!(tr("en", CREDITS), CREDITS, "the credit line names upstream on purpose");
+    for lang in LANGUAGES.iter().map(|l| l.code) {
+        for source in ["About CADCraft", "Quit CADCraft", "CADCraft"] {
+            let shown = tr(lang, source);
+            assert!(!shown.contains("CADCraft"), "{lang}: {source:?} shows {shown:?}");
+        }
+        assert!(!tr_menu(lang, "About CADCraft").contains("CADCraft"), "{lang}: menu");
+    }
+}
